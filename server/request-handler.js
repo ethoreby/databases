@@ -1,6 +1,7 @@
 /* global require, exports */
 var httpHelpers = require('./http-helpers');
 var db = require('../SQL/persistent_server');
+var userHelpers = require('./user-helpers');
 
 var getMessages = function(request, response){
   var queryStr = 'SELECT * FROM chats';
@@ -10,26 +11,24 @@ var getMessages = function(request, response){
   });
 };
 
-var postUser = function(username) {
-  var queryStr = 'INSERT INTO users (username)';
-  queryStr += ' VALUES ("' + username + '");';
+var saveMessage = function(request, response, message) {
+  userHelpers.getUser(message.username, function(user) {
+    message['userid'] = user.id;
 
-  db.dbConnection.query(queryStr, function(err) {
-    console.log('creating new user %s', username);
-    if (err) { throw err; }
-  });
-};
+    var queryStr = 'INSERT INTO chats (message, username, roomname, user_id)';
+    queryStr += ' VALUES ("' + message.message + '","' + message.username + '","' + message.roomname + '",' + message.userid + ');';
 
-var checkUser = function(username) {
-  var queryStr = 'SELECT user_id FROM users WHERE username="' + username + '"';
+    console.log(queryStr);
 
-  db.dbConnection.query(queryStr, function(err, output) {
-    console.log('checking user ' + username);
-    if (err) { throw err; }
-
-    if (output.length === 0) {
-      postUser(username);
-    }
+    db.dbConnection.query(queryStr, function(err) {
+      if (err) {
+        console.log('Error: Could not save messasge');
+        httpHelpers.sendResponse(response,null, 500);
+        throw err;
+      } else {
+        httpHelpers.sendResponse(response, null, 201);
+      }
+    });
   });
 };
 
@@ -39,17 +38,17 @@ var postMessage = function(request, response){
     // parse the data
     var message = JSON.parse(data);
 
-    // add to database
-    var queryStr = 'INSERT INTO chats (message, username, roomname)';
-    queryStr += ' VALUES ("' + message.message + '","' + message.username + '","' + message.roomname + '");';
-
-    console.log(queryStr);
-
-    db.dbConnection.query(queryStr, function(err) {
-      if (err) { throw err; }
+    userHelpers.checkUser(message.username, function(exists) {
+      if (!exists) {
+        userHelpers.createUser(message.username, function(created) {
+          if (created) {
+            saveMessage(request, response, message);
+          }
+        });
+      } else {
+        saveMessage(request, response, message);
+      }
     });
-
-    httpHelpers.sendResponse(response, null, 201);
   });
 };
 
