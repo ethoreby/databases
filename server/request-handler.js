@@ -2,13 +2,21 @@
 var httpHelpers = require('./http-helpers');
 var db = require('../SQL/persistent_server');
 var userHelpers = require('./user-helpers');
+var sequelize = require('../SQL/sqlize');
 
 var getMessages = function(request, response){
-  var queryStr = 'SELECT * FROM chats';
-  db.dbConnection.query(queryStr, function(err, output) {
-    if(err) { throw err; }
-    httpHelpers.sendResponse(response, {results: output} );
-  });
+  // SQLize
+  var messages = sequelize.User.find();
+  console.log(JSON.stringify(messages));
+
+  httpHelpers.sendResponse(response, { results: messages });
+
+  // SQL
+  // var queryStr = 'SELECT * FROM chats';
+  // db.dbConnection.query(queryStr, function(err, output) {
+  //   if(err) { throw err; }
+  //   httpHelpers.sendResponse(response, {results: output} );
+  // });
 };
 
 var saveMessage = function(request, response, message) {
@@ -33,23 +41,43 @@ var saveMessage = function(request, response, message) {
 };
 
 var postMessage = function(request, response){
-  // listen for chunks, assemble them
-  httpHelpers.collectData(request, function(data){
-    // parse the data
+  // SQLize
+  httpHelpers.collectData(request, function(data) {
+    console.log(data);
     var message = JSON.parse(data);
 
-    userHelpers.checkUser(message.username, function(exists) {
-      if (!exists) {
-        userHelpers.createUser(message.username, function(created) {
-          if (created) {
-            saveMessage(request, response, message);
-          }
-        });
-      } else {
-        saveMessage(request, response, message);
-      }
-    });
+    sequelize.sequelize.sync();
+    sequelize.User.findOrCreate({ username: message.username })
+      .success(function(user) {
+        message.UserId = user.id;
+        sequelize.Chat.create(message)
+          .success(function() {
+            httpHelpers.sendResponse(response, null, 201);
+          })
+          .error(function(error) {
+            httpHelpers.sendResponse(response, error, 500);
+          });
+      });
   });
+
+  // SQL
+  // // listen for chunks, assemble them
+  // httpHelpers.collectData(request, function(data){
+  //   // parse the data
+  //   var message = JSON.parse(data);
+
+  //   userHelpers.checkUser(message.username, function(exists) {
+  //     if (!exists) {
+  //       userHelpers.createUser(message.username, function(created) {
+  //         if (created) {
+  //           saveMessage(request, response, message);
+  //         }
+  //       });
+  //     } else {
+  //       saveMessage(request, response, message);
+  //     }
+  //   });
+  // });
 };
 
 var options = function(request, response){
