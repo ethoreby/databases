@@ -6,6 +6,7 @@
   "dependencies": {
     "jasmine-node": "~1.14.2",
     "mysql": "~2.1.1",
-    "request": "~2.34.0"
+    "request": "~2.34.0",
+    "sequelize": "~1.7.0"
   }
 }

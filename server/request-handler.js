@@ -22,7 +22,7 @@ var saveMessage = function(request, response, message) {
 
     db.dbConnection.query(queryStr, function(err) {
       if (err) {
-        console.log('Error: Could not save messasge');
+        console.log('Error: Could not save message');
         httpHelpers.sendResponse(response,null, 500);
         throw err;
       } else {
