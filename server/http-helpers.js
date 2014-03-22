@@ -19,5 +19,5 @@ exports.collectData = function(request, callback){
   });
   request.on('end', function(){
     callback(data);
-  })
+  });
 };

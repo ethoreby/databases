@@ -50,7 +50,7 @@ describe("Persistent Node Chat Server", function() {
                   // Should have one result:
                   expect(results.length).toEqual(1);
                   expect(results[0].username).toEqual("Valjean");
-                  expect(results[0].chat_text).toEqual("In mercy's name, three days is all I need."); // changed message -> chat_text
+                  expect(results[0].message).toEqual("In mercy's name, three days is all I need."); // changed message -> message
                   /* TODO: You will need to change these tests if the
                    * column names in your schema are different from
                    * mine! */

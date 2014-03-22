@@ -2,12 +2,12 @@
 var httpHelpers = require('./http-helpers');
 var db = require('../SQL/persistent_server');
 
-messages = {
-
-};
-
 var getMessages = function(request, response){
-  httpHelpers.sendResponse(response, {results: messages} );
+  var queryStr = 'SELECT * FROM chats';
+  db.dbConnection.query(queryStr, function(err, output) {
+    if(err) { throw err; }
+    httpHelpers.sendResponse(response, {results: output} );
+  });
 };
 
 var postMessage = function(request, response){
@@ -15,16 +15,15 @@ var postMessage = function(request, response){
   httpHelpers.collectData(request, function(data){
     // parse the data
     var message = JSON.parse(data);
-    console.log(message);
 
     // add to database
-    var queryStr = 'INSERT INTO chats (chat_text, username, roomname)';
-    queryStr += ' VALUES ("' + message.text + '","' + message.username + '","' + message.roomname + '");';
+    var queryStr = 'INSERT INTO chats (message, username, roomname)';
+    queryStr += ' VALUES ("' + message.message + '","' + message.username + '","' + message.roomname + '");';
 
     console.log(queryStr);
 
     db.dbConnection.query(queryStr, function(err) {
-      if (err) throw err;
+      if (err) { throw err; }
     });
 
     httpHelpers.sendResponse(response, null, 201);

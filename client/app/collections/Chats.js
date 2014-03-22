@@ -11,7 +11,7 @@ var Chats = Backbone.Collection.extend({
 
   sendChat: function (chat) {
     chat = _.extend({
-      text: $('.chatInput').val()
+      message: $('.chatInput').val()
     });
 
     this.create(new Chat(chat));

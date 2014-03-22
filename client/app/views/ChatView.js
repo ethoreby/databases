@@ -4,7 +4,7 @@ var ChatView = Backbone.View.extend({
   tagName: 'li',
 
   template: _.template(
-    '<%= username %>: <%= text %>'
+    '<%= username %>: <%= message %>'
   ),
 
   initialize: function (params) {

@@ -5,7 +5,7 @@ var Chat = Backbone.Model.extend({
 
   defaults: {
     username: 'username',
-    text: 'text',
+    message: 'text',
     roomname: 'roomname'
   }
 });
