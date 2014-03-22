@@ -16,7 +16,7 @@ var ip = "127.0.0.1";
 
 var routes = {
   '/classes/messages': messageHandler.handler,
-  '/classes/users': messageHandler.handler // userHandler.handler
+  // '/classes/users': messageHandler.handler // userHandler.handler
 };
 
 var router = function(request, response) {
@@ -30,7 +30,7 @@ var router = function(request, response) {
   } else {
     httpHelpers.sendResponse(response, null, 404);
   }
-}
+};
 
 var server = http.createServer(router);
 console.log("Listening on http://" + ip + ":" + port);

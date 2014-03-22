@@ -10,6 +10,29 @@ var getMessages = function(request, response){
   });
 };
 
+var postUser = function(username) {
+  var queryStr = 'INSERT INTO users (username)';
+  queryStr += ' VALUES ("' + username + '");';
+
+  db.dbConnection.query(queryStr, function(err) {
+    console.log('creating new user %s', username);
+    if (err) { throw err; }
+  });
+};
+
+var checkUser = function(username) {
+  var queryStr = 'SELECT user_id FROM users WHERE username="' + username + '"';
+
+  db.dbConnection.query(queryStr, function(err, output) {
+    console.log('checking user ' + username);
+    if (err) { throw err; }
+
+    if (output.length === 0) {
+      postUser(username);
+    }
+  });
+};
+
 var postMessage = function(request, response){
   // listen for chunks, assemble them
   httpHelpers.collectData(request, function(data){

@@ -6,24 +6,24 @@ USE chat;
 
 CREATE TABLE chats (
   id INT(5) NOT NULL AUTO_INCREMENT,
+  username VARCHAR(100),
+  message TEXT(200),
+  roomname VARCHAR(100),
+  user_id INT(5),
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  username VARCHAR(15),
-  message TEXT(200),
-  roomname VARCHAR(15),
   PRIMARY KEY  (id)
 );
 
 CREATE TABLE users (
   id INT(5) NOT NULL AUTO_INCREMENT,
-  username VARCHAR(15),
-  user_id INT(5),
+  username VARCHAR(100),
   PRIMARY KEY  (id)
 );
 
 CREATE TABLE rooms (
   id INT(5) NOT NULL AUTO_INCREMENT,
-  roomname VARCHAR(15),
+  roomname VARCHAR(100),
   room_id INT(5),
   PRIMARY KEY  (id)
 );
@@ -43,7 +43,7 @@ CREATE TABLE friendships (
 );
 
 
-ALTER TABLE users ADD CONSTRAINT users_fk1 FOREIGN KEY (user_id) REFERENCES users(id);
+ALTER TABLE chats ADD CONSTRAINT users_fk1 FOREIGN KEY (user_id) REFERENCES users(id);
 ALTER TABLE rooms ADD CONSTRAINT rooms_fk1 FOREIGN KEY (room_id) REFERENCES rooms(id);
 ALTER TABLE participants ADD CONSTRAINT participants_fk1 FOREIGN KEY (user_id) REFERENCES users(id);
 ALTER TABLE participants ADD CONSTRAINT participants_fk2 FOREIGN KEY (room_id) REFERENCES rooms(id);
