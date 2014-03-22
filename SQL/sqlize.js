@@ -21,9 +21,18 @@ var Room = sequelize.define('Room', {
 });
 
 // Define relationships
+// Chat relationships
 Chat.belongsTo(User);
 Chat.belongsTo(Room);
-User.hasMany(User, {as: 'Friend'});
+
+// User relationships
+User.hasMany(Chat);
+User.hasMany(User, {as: 'Friend', through: 'Friendships'});
+User.hasMany(Room, {through: 'Participants'});
+
+// Room relationships
+Room.hasMany(Chat);
+Room.hasMany(User, {through: 'Participants'});
 
 // Sync database
 sequelize.sync();
