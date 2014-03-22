@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>chatterbox</title>
+
+  <!-- CSS Source Files -->
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- Javascript Dependencies -->
+  <script src="bower_components/underscore/underscore.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/backbone/backbone.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+  <!-- Javascript Source Files -->
+  <script src="app/models/App.js"></script>
+  <script src="app/models/Chat.js"></script>
+
+  <script src="app/collections/Chats.js"></script>
+
+  <script src="app/views/AppView.js"></script>
+  <script src="app/views/ChatsView.js"></script>
+  <script src="app/views/ChatView.js"></script>
+
+  <script src="app/config.js"></script>
+
+</head>
+<body>
+
+  <div class="container main">
+
+    <h1>Chatterbox</h1>
+
+    <div class="col-md-12">
+      tabs go here!
+    </div>
+
+    <div class="row">
+
+      <div class="col-md-9 chatWindow">
+
+        <span>Chats</span>
+
+        <ul class="chatList">
+        </ul>
+
+      </div>
+
+      <div class="col-md-3">
+
+        <span>Users</span>
+
+        <ul class="userList">
+        </ul>
+
+      </div>
+
+    </div>
+
+    <span>
+      <input type="text" class="chatInput">
+      <input type="submit" value="Send Message" class="btn btn-primary chatButton">
+    </span>
+
+  </div>
+
+  <script>
+    $(function() {
+      var app = new App();
+      window.app = app;
+
+      var appView = new AppView({model: app});
+    });
+  </script>
+</body>
+</html>

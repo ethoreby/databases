@@ -1,0 +1,11 @@
+{
+  "name": "2014-02-databases",
+  "description": "chatterbox databases",
+  "version": "0.0.1",
+  "private": true,
+  "dependencies": {
+    "jasmine-node": "~1.14.2",
+    "mysql": "~2.1.1",
+    "request": "~2.34.0"
+  }
+}
