@@ -1,12 +1,12 @@
 /* global require, exports */
 var httpHelpers = require('./http-helpers');
-var db = require('../SQL/persistent_server');
-var userHelpers = require('./user-helpers');
+// var db = require('../SQL/persistent_server'); // SQL Helper Functions
+// var userHelpers = require('./user-helpers'); // SQL Helper Functions
 var sequelize = require('../SQL/sqlize');
 
 var getMessages = function(request, response){
   // SQLize
-  var messages = sequelize.User.find();
+  var messages = sequelize.Chat.find();
   console.log(JSON.stringify(messages));
 
   httpHelpers.sendResponse(response, { results: messages });
@@ -19,26 +19,27 @@ var getMessages = function(request, response){
   // });
 };
 
-var saveMessage = function(request, response, message) {
-  userHelpers.getUser(message.username, function(user) {
-    message['userid'] = user.id;
+// SQL Helper Function
+// var saveMessage = function(request, response, message) {
+//   userHelpers.getUser(message.username, function(user) {
+//     message['userid'] = user.id;
 
-    var queryStr = 'INSERT INTO chats (message, username, roomname, user_id)';
-    queryStr += ' VALUES ("' + message.message + '","' + message.username + '","' + message.roomname + '",' + message.userid + ');';
+//     var queryStr = 'INSERT INTO chats (message, username, roomname, user_id)';
+//     queryStr += ' VALUES ("' + message.message + '","' + message.username + '","' + message.roomname + '",' + message.userid + ');';
 
-    console.log(queryStr);
+//     console.log(queryStr);
 
-    db.dbConnection.query(queryStr, function(err) {
-      if (err) {
-        console.log('Error: Could not save message');
-        httpHelpers.sendResponse(response,null, 500);
-        throw err;
-      } else {
-        httpHelpers.sendResponse(response, null, 201);
-      }
-    });
-  });
-};
+//     db.dbConnection.query(queryStr, function(err) {
+//       if (err) {
+//         console.log('Error: Could not save message');
+//         httpHelpers.sendResponse(response,null, 500);
+//         throw err;
+//       } else {
+//         httpHelpers.sendResponse(response, null, 201);
+//       }
+//     });
+//   });
+// };
 
 var postMessage = function(request, response){
   // SQLize
